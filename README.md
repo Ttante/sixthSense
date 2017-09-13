@@ -1,3 +1,3 @@
-# Six Sense 3
+# Six Sense
  
 Router Sniffer
