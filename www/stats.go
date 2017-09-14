@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+type stats map[string]interface{}
+
 type StatsHandler struct {
 	stats []* stats
 }
@@ -25,6 +27,10 @@ func(s *StatsHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	}
 }
 
+func(s *StatsHandler) badMethod(resp http.ResponseWriter, req *http.Request) {
+	resp.WriteHeader(http.StatusMethodNotAllowed)
+}
+
 func(s *StatsHandler) get(resp http.ResponseWriter, req *http.Request) {
 	err := json.NewEncoder(resp).Encode(s.stats)
 
@@ -34,5 +40,5 @@ func(s *StatsHandler) get(resp http.ResponseWriter, req *http.Request) {
 }
 
 func(s *StatsHandler) handle500(resp http.ResponseWriter) {
-	resp.WriteHeader(http.InternalServerError)
+	resp.WriteHeader(http.StatusInternalServerError)
 }
