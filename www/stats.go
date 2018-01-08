@@ -3,12 +3,21 @@ package www
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/ttante/sixthSense/cache"
 )
 
 type stats map[string]interface{}
 
 type StatsHandler struct {
-	stats []* stats
+	stats []*stats
+	dataCache *cache.Cache
+}
+
+func NewStats () *StatsHandler {
+	return &StatsHandler{
+		dataCache: cache.New(),
+	}
 }
 
 // first () for what class func addresses, 2nd for func params
@@ -32,6 +41,9 @@ func(s *StatsHandler) badMethod(resp http.ResponseWriter, req *http.Request) {
 }
 
 func(s *StatsHandler) get(resp http.ResponseWriter, req *http.Request) {
+
+	s.stats = append(s.stats, s.dataCache.Read())
+
 	err := json.NewEncoder(resp).Encode(s.stats)
 
 	if err != nil{
